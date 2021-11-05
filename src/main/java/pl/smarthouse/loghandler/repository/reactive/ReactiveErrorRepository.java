@@ -1,25 +1,20 @@
 package pl.smarthouse.loghandler.repository.reactive;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.smarthouse.loghandler.model.ErrorDao;
+import pl.smarthouse.loghandler.model.ErrorDto;
 import pl.smarthouse.loghandler.repository.ErrorRepository;
+import pl.smarthouse.loghandler.utils.ModelMapper;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-import reactor.util.retry.Retry;
 
-import java.time.Duration;
-
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Repository
 public class ReactiveErrorRepository {
 
-	ErrorRepository errorRepository;
+  ErrorRepository errorRepository;
 
-	public Mono<ErrorDao> save (final ErrorDao errorDao) {
-		return Mono.fromCallable(() -> errorRepository.save(errorDao))
-				.subscribeOn(Schedulers.boundedElastic())
-				.cast(ErrorDao.class)
-				.retryWhen(Retry.fixedDelay(10, Duration.ofMillis(1000)));
-	}
+  public Mono<ErrorDto> save(final ErrorDao errorDao) {
+    return errorRepository.save(errorDao).map(element -> ModelMapper.toErrorDto(element));
+  }
 }
