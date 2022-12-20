@@ -1,6 +1,8 @@
-package pl.smarthouse.modulemanager.model;
+package pl.smarthouse.modulemanager.model.dto;
 
 import lombok.*;
+
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -15,4 +17,6 @@ public class SettingsDto {
   private String macAddress;
   private String version;
   private String firmware;
+  private String ipAddress;
+  Instant updateTimestamp;
 }

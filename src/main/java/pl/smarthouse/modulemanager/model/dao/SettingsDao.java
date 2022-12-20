@@ -1,4 +1,4 @@
-package pl.smarthouse.modulemanager.model;
+package pl.smarthouse.modulemanager.model.dao;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Document(collection = "settings")
@@ -20,7 +21,7 @@ public class SettingsDao {
   @NonNull private boolean isTypeLocked;
   @NonNull private String macAddress;
   private String version;
-  private String firmware;
-  private String ipAddress;
-  Instant updateTimestamp;
+  @NonNull private String firmware;
+  @NotNull private String ipAddress;
+  @NonNull Instant updateTimestamp;
 }

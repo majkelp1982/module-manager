@@ -3,8 +3,7 @@ package pl.smarthouse.modulemanager.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
-import pl.smarthouse.modulemanager.model.SettingsDao;
-import pl.smarthouse.modulemanager.model.SettingsDto;
+import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.service.SettingsHandlerService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,12 +22,12 @@ public class ModuleManagerController {
   }
 
   @GetMapping(value = "/all")
-  public Flux<SettingsDao> getAllModules() {
+  public Flux<SettingsDto> getAllModules() {
     return settingsHandlerService.findAll();
   }
 
   @GetMapping(value = "/ip")
-  public Mono<String> getIPbyMacAddress(@RequestParam final String macAddress) {
+  public Mono<String> getIpByMacAddress(@RequestParam final String macAddress) {
     return settingsHandlerService.getIPbyMacAddress(macAddress);
   }
 }

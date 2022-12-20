@@ -1,10 +1,12 @@
 package pl.smarthouse.modulemanager.utils;
 
-import pl.smarthouse.modulemanager.model.SettingsDao;
-import pl.smarthouse.modulemanager.model.SettingsDto;
+import pl.smarthouse.modulemanager.model.dao.SettingsDao;
+import pl.smarthouse.modulemanager.model.dto.SettingsDto;
+
+import java.time.LocalDateTime;
 
 public class ModelMapper {
-  public static SettingsDao toSettingsDao(final SettingsDto settingsDto) {
+  public static SettingsDao toSettingsDao(final SettingsDto settingsDto, final String hostAddress) {
     return SettingsDao.builder()
         .moduleType(settingsDto.getModuleType())
         .typeHash(settingsDto.getTypeHash())
@@ -12,6 +14,8 @@ public class ModelMapper {
         .macAddress(settingsDto.getMacAddress())
         .version(settingsDto.getVersion())
         .firmware(settingsDto.getFirmware())
+        .updateTimestamp(DateTimeUtils.toInstant(LocalDateTime.now()))
+        .ipAddress(hostAddress)
         .build();
   }
 
@@ -23,6 +27,8 @@ public class ModelMapper {
         .macAddress(settingsDao.getMacAddress())
         .version(settingsDao.getVersion())
         .firmware(settingsDao.getFirmware())
+        .ipAddress(settingsDao.getIpAddress())
+        .updateTimestamp(settingsDao.getUpdateTimestamp())
         .build();
   }
 }
