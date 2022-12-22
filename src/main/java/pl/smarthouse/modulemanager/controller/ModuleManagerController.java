@@ -26,8 +26,8 @@ public class ModuleManagerController {
     return settingsHandlerService.findAll();
   }
 
-  @GetMapping(value = "/ip")
-  public Mono<String> getIpByMacAddress(@RequestParam final String macAddress) {
-    return settingsHandlerService.getIPbyMacAddress(macAddress);
+  @GetMapping(value = "/settings")
+  public Mono<SettingsDto> getByMacAddress(@RequestParam final String macAddress) {
+    return settingsHandlerService.getByMacAddress(macAddress);
   }
 }

@@ -28,7 +28,7 @@ public class ReactiveSettingsRepository {
     return settingsRepository.findAll().subscribeOn(Schedulers.boundedElastic());
   }
 
-  public Mono<SettingsDao> findIPByMacAddress(final String macAddress) {
+  public Mono<SettingsDao> findByMacAddress(final String macAddress) {
     return settingsRepository.findFirstByMacAddress(macAddress);
   }
 }
