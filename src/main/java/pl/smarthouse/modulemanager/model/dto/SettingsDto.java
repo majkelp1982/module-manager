@@ -8,6 +8,7 @@ import java.time.Instant;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 public class SettingsDto {
@@ -18,5 +19,5 @@ public class SettingsDto {
   private String version;
   private String firmware;
   private String ipAddress;
-  Instant updateTimestamp;
+  private Instant updateTimestamp;
 }
