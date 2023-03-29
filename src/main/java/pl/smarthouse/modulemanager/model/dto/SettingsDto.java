@@ -10,7 +10,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
+@ToString()
 public class SettingsDto {
   private String moduleType;
   private int typeHash;

@@ -1,16 +1,13 @@
 package pl.smarthouse.modulemanager.model.dao;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import java.time.Instant;
+import javax.validation.constraints.NotNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
-
 @Document(collection = "settings")
+@Data
 @Getter
 @Setter
 @Builder

@@ -14,8 +14,10 @@ public class ReactiveSettingsRepository {
 
   SettingsRepository settingsRepository;
 
-  public Mono<SettingsDao> save(final SettingsDao settingsDao) {
-    return settingsRepository.save(settingsDao).subscribeOn(Schedulers.boundedElastic());
+  public Mono<SettingsDao> updateSettings(final SettingsDao settingsDao) {
+    return settingsRepository
+        .replaceByMacAddress(settingsDao.getMacAddress(), settingsDao)
+        .subscribeOn(Schedulers.boundedElastic());
   }
 
   public Mono<Void> deleteByMacAddress(final String macAddress) {

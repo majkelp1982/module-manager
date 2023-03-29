@@ -15,9 +15,9 @@ public class ModuleManagerController {
   SettingsHandlerService settingsHandlerService;
 
   @PostMapping(value = "/settings")
-  public Mono<SettingsDto> saveSettings(
+  public Mono<SettingsDto> updateSettings(
       @RequestBody final SettingsDto settingsDto, final ServerHttpRequest request) {
-    return settingsHandlerService.saveSettings(
+    return settingsHandlerService.updateSettings(
         settingsDto, request.getRemoteAddress().getAddress().getHostAddress());
   }
 

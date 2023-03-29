@@ -1,6 +1,7 @@
 package pl.smarthouse.modulemanager.service;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.smarthouse.modulemanager.model.dto.SettingsDto;
@@ -16,23 +17,23 @@ public class SettingsHandlerService {
   private static final String LOG_SUCCESS_ON_ACTION = "Success action: {} for module: {}";
   private static final String LOG_ERROR_ON_ACTION = "Error action:{} for module: {}, reason:{}";
   private static final String LOG_ERROR_ON_FIND_ALL = "Error action:{}, reason:{}";
-  private static final String ACTION_SAVE = "saveSettings";
+  private static final String ACTION_UPDATE = "updateSettings";
   private static final String ACTION_FIND_ALL = "findAll";
   private static final String ACTION_GET_BY_MAC = "getIPbyMacAddress";
 
   ReactiveSettingsRepository reactiveSettingsRepository;
 
-  public Mono<SettingsDto> saveSettings(final SettingsDto settingsDto, final String hostAddress) {
-    return reactiveSettingsRepository
-        .deleteByMacAddress(settingsDto.getMacAddress())
-        .then(Mono.just(settingsDto))
-        .map(settings -> ModelMapper.toSettingsDao(settings, hostAddress))
-        .flatMap(settingsDao -> reactiveSettingsRepository.save(settingsDao))
+  public Mono<SettingsDto> updateSettings(
+      final SettingsDto settingsDto, final @NonNull String hostAddress) {
+    return Mono.just(ModelMapper.toSettingsDao(settingsDto, hostAddress))
+        .flatMap(settingsDao -> reactiveSettingsRepository.updateSettings(settingsDao))
+        .doOnNext(settingsDao -> log.info("Object returned: {}", settingsDao))
+        .flatMap(ignore -> reactiveSettingsRepository.findByMacAddress(settingsDto.getMacAddress()))
         .map(ModelMapper::toSettingsDto)
-        .doOnSuccess(ignore -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_SAVE, settingsDto))
+        .doOnSuccess(ignore -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_UPDATE, settingsDto))
         .doOnError(
             throwable ->
-                log.error(LOG_ERROR_ON_ACTION, ACTION_SAVE, settingsDto, throwable.getMessage()));
+                log.error(LOG_ERROR_ON_ACTION, ACTION_UPDATE, settingsDto, throwable.getMessage()));
   }
 
   public Flux<SettingsDto> findAll() {
@@ -46,14 +47,14 @@ public class SettingsHandlerService {
   public Mono<SettingsDto> getByMacAddress(final String macAddress) {
     return reactiveSettingsRepository
         .findByMacAddress(macAddress)
-        .doOnSuccess(settingsDao -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_GET_BY_MAC, settingsDao))
+        .map(ModelMapper::toSettingsDto)
+        .doOnSuccess(settingsDto -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_GET_BY_MAC, settingsDto))
         .doOnError(
             throwable ->
                 log.error(
                     LOG_ERROR_ON_ACTION,
                     ACTION_GET_BY_MAC,
                     String.format("MAC address: %s", macAddress),
-                    throwable.getMessage()))
-        .map(ModelMapper::toSettingsDto);
+                    throwable.getMessage()));
   }
 }
