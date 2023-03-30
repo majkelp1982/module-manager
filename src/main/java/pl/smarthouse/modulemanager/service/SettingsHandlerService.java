@@ -2,6 +2,7 @@ package pl.smarthouse.modulemanager.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.repository.reactive.ReactiveSettingsRepository;
@@ -24,9 +25,10 @@ public class SettingsHandlerService {
 
   public Mono<SettingsDto> saveSettings(final SettingsDto settingsDto, final String hostAddress) {
     return reactiveSettingsRepository
-        .deleteByMacAddress(settingsDto.getMacAddress())
-        .then(Mono.just(settingsDto))
-        .map(settings -> ModelMapper.toSettingsDao(settings, hostAddress))
+        .findByMacAddress(settingsDto.getMacAddress())
+        .map(settingsDao -> settingsDao.getId())
+        .switchIfEmpty(Mono.defer(() -> Mono.just(ObjectId.get().toString())))
+        .map(id -> ModelMapper.toSettingsDao(id, settingsDto, hostAddress))
         .flatMap(settingsDao -> reactiveSettingsRepository.save(settingsDao))
         .map(ModelMapper::toSettingsDto)
         .doOnSuccess(ignore -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_SAVE, settingsDto))

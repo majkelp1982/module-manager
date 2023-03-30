@@ -1,13 +1,14 @@
 package pl.smarthouse.modulemanager.utils;
 
+import java.time.LocalDateTime;
 import pl.smarthouse.modulemanager.model.dao.SettingsDao;
 import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 
-import java.time.LocalDateTime;
-
 public class ModelMapper {
-  public static SettingsDao toSettingsDao(final SettingsDto settingsDto, final String hostAddress) {
+  public static SettingsDao toSettingsDao(
+      final String id, final SettingsDto settingsDto, final String hostAddress) {
     return SettingsDao.builder()
+        .id(id)
         .moduleType(settingsDto.getModuleType())
         .typeHash(settingsDto.getTypeHash())
         .isTypeLocked(settingsDto.isTypeLocked())

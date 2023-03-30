@@ -1,8 +1,7 @@
 package pl.smarthouse.modulemanager.model.dto;
 
-import lombok.*;
-
 import java.time.Instant;
+import lombok.*;
 
 @Getter
 @Setter
