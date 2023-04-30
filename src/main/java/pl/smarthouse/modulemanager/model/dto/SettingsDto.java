@@ -11,12 +11,16 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 public class SettingsDto {
-  private String moduleType;
+  private String id;
+  private String type;
   private int typeHash;
   private boolean isTypeLocked;
-  private String macAddress;
-  private String version;
-  private String firmware;
-  private String ipAddress;
-  private Instant updateTimestamp;
+  private String moduleMacAddress;
+  private String serviceVersion;
+  private String moduleFirmwareVersion;
+  private String moduleIpAddress;
+  private String serviceIpAddress;
+  Instant moduleUpdateTimestamp;
+  Instant serviceUpdateTimestamp;
+  boolean connectionEstablish;
 }

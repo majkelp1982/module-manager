@@ -18,17 +18,11 @@ public class ReactiveSettingsRepository {
     return settingsRepository.save(settingsDao).subscribeOn(Schedulers.boundedElastic());
   }
 
-  public Mono<Void> deleteByMacAddress(final String macAddress) {
-    return settingsRepository
-        .deleteByMacAddress(macAddress)
-        .subscribeOn(Schedulers.boundedElastic());
-  }
-
   public Flux<SettingsDao> findAll() {
     return settingsRepository.findAll().subscribeOn(Schedulers.boundedElastic());
   }
 
-  public Mono<SettingsDao> findByMacAddress(final String macAddress) {
-    return settingsRepository.findFirstByMacAddress(macAddress);
+  public Mono<SettingsDao> findByModuleMacAddress(final String moduleMacAddress) {
+    return settingsRepository.findFirstByModuleMacAddress(moduleMacAddress);
   }
 }
