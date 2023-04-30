@@ -22,6 +22,12 @@ public class ModuleManagerController {
         moduleSettingsDto, request.getRemoteAddress().getAddress().getHostAddress());
   }
 
+  @PutMapping(value = "/updateServiceAddress")
+  public Mono<SettingsDto> updateServiceAddress(
+      @RequestParam final String moduleMacAddress, @RequestParam final String serviceAddress) {
+    return settingsHandlerService.updateServiceAddress(moduleMacAddress, serviceAddress);
+  }
+
   @GetMapping(value = "/all")
   public Flux<SettingsDto> getAllSettings() {
     return settingsHandlerService.findAll();

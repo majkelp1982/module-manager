@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
 import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.repository.reactive.ReactiveSettingsRepository;
@@ -67,5 +68,37 @@ public class SettingsHandlerService {
                     String.format("MAC address: %s", macAddress),
                     throwable.getMessage()))
         .map(ModelMapper::toSettingsDto);
+  }
+
+  public Mono<SettingsDto> updateServiceAddress(
+      final String moduleMacAddress, final String serviceAddress) {
+    return reactiveSettingsRepository
+        .findByModuleMacAddress(moduleMacAddress)
+        .switchIfEmpty(
+            Mono.defer(
+                () ->
+                    Mono.error(
+                        new NotFoundException(
+                            String.format(
+                                "Settings not found for mac address: %s", moduleMacAddress)))))
+        .map(
+            settingsDao -> {
+              settingsDao.setServiceAddress(serviceAddress);
+              return settingsDao;
+            })
+        .flatMap(settingsDao -> reactiveSettingsRepository.save(settingsDao))
+        .map(ModelMapper::toSettingsDto)
+        .doOnSuccess(
+            ignore ->
+                log.info(
+                    LOG_SUCCESS_ON_ACTION,
+                    String.format("updateServiceAddress with service address: %s", serviceAddress),
+                    moduleMacAddress))
+        .doOnError(
+            throwable ->
+                log.error(
+                    LOG_ERROR_ON_ACTION,
+                    String.format("updateServiceAddress with service address: %s", serviceAddress),
+                    moduleMacAddress));
   }
 }

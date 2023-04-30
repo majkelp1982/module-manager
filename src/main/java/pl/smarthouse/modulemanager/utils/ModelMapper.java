@@ -45,7 +45,7 @@ public class ModelMapper {
         .serviceVersion(settingsDao.getServiceVersion())
         .moduleFirmwareVersion(settingsDao.getModuleFirmwareVersion())
         .moduleIpAddress(settingsDao.getModuleIpAddress())
-        .serviceIpAddress(settingsDao.getServiceIpAddress())
+        .serviceAddress(settingsDao.getServiceAddress())
         .moduleUpdateTimestamp(settingsDao.getModuleUpdateTimestamp())
         .serviceUpdateTimestamp(settingsDao.getServiceUpdateTimestamp())
         .connectionEstablish(settingsDao.isConnectionEstablish())

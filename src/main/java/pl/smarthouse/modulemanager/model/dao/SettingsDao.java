@@ -20,7 +20,7 @@ public class SettingsDao {
   private String serviceVersion;
   @NonNull private String moduleFirmwareVersion;
   @NotNull private String moduleIpAddress;
-  private String serviceIpAddress;
+  private String serviceAddress;
   @NonNull Instant moduleUpdateTimestamp;
   Instant serviceUpdateTimestamp;
   boolean connectionEstablish;

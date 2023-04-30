@@ -19,7 +19,7 @@ public class SettingsDto {
   private String serviceVersion;
   private String moduleFirmwareVersion;
   private String moduleIpAddress;
-  private String serviceIpAddress;
+  private String serviceAddress;
   Instant moduleUpdateTimestamp;
   Instant serviceUpdateTimestamp;
   boolean connectionEstablish;
