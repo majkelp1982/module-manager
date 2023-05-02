@@ -51,4 +51,11 @@ public class ModelMapper {
         .connectionEstablish(settingsDao.isConnectionEstablish())
         .build();
   }
+
+  public static SettingsDao enrichSettingsDaoWithServiceAddress(
+      final SettingsDao settingsDao, final String serviceAddress) {
+    settingsDao.setServiceAddress(serviceAddress);
+    settingsDao.setServiceUpdateTimestamp(DateTimeUtils.toInstant(LocalDateTime.now()));
+    return settingsDao;
+  }
 }

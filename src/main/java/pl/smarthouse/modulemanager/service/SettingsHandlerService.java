@@ -89,10 +89,8 @@ public class SettingsHandlerService {
                             String.format(
                                 "Settings not found for mac address: %s", moduleMacAddress)))))
         .map(
-            settingsDao -> {
-              settingsDao.setServiceAddress(serviceAddress);
-              return settingsDao;
-            })
+            settingsDao ->
+                ModelMapper.enrichSettingsDaoWithServiceAddress(settingsDao, serviceAddress))
         .flatMap(settingsDao -> reactiveSettingsRepository.save(settingsDao))
         .map(ModelMapper::toSettingsDto)
         .doOnSuccess(
