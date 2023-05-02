@@ -8,6 +8,7 @@ import org.webjars.NotFoundException;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
 import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.repository.reactive.ReactiveSettingsRepository;
+import pl.smarthouse.modulemanager.service.exceptiions.SettingsNotFoundException;
 import pl.smarthouse.modulemanager.utils.ModelMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -59,6 +60,12 @@ public class SettingsHandlerService {
   public Mono<SettingsDto> getByModuleMacAddress(final String macAddress) {
     return reactiveSettingsRepository
         .findByModuleMacAddress(macAddress)
+        .switchIfEmpty(
+            Mono.defer(
+                () ->
+                    Mono.error(
+                        new SettingsNotFoundException(
+                            String.format("Settings not found for mac address: %s", macAddress)))))
         .doOnSuccess(settingsDao -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_GET_BY_MAC, settingsDao))
         .doOnError(
             throwable ->

@@ -1,11 +1,13 @@
 package pl.smarthouse.modulemanager.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
 import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.service.SettingsHandlerService;
+import pl.smarthouse.modulemanager.service.exceptiions.SettingsNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -14,6 +16,12 @@ import reactor.core.publisher.Mono;
 public class ModuleManagerController {
 
   SettingsHandlerService settingsHandlerService;
+
+  @ExceptionHandler(SettingsNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public Mono<String> handleNotFoundException(final Exception exception) {
+    return Mono.just(exception.getMessage());
+  }
 
   @PostMapping(value = "/settings")
   public Mono<SettingsDto> saveModuleSettings(
