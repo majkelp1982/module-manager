@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
-import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.service.SettingsHandlerService;
 import pl.smarthouse.modulemanager.service.exceptiions.SettingsNotFoundException;
+import pl.smarthouse.sharedobjects.dto.SettingsDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

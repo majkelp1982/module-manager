@@ -6,10 +6,10 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
-import pl.smarthouse.modulemanager.model.dto.SettingsDto;
 import pl.smarthouse.modulemanager.repository.reactive.ReactiveSettingsRepository;
 import pl.smarthouse.modulemanager.service.exceptiions.SettingsNotFoundException;
 import pl.smarthouse.modulemanager.utils.ModelMapper;
+import pl.smarthouse.sharedobjects.dto.SettingsDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

@@ -3,7 +3,7 @@ package pl.smarthouse.modulemanager.utils;
 import java.time.LocalDateTime;
 import pl.smarthouse.modulemanager.model.dao.SettingsDao;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
-import pl.smarthouse.modulemanager.model.dto.SettingsDto;
+import pl.smarthouse.sharedobjects.dto.SettingsDto;
 
 public class ModelMapper {
   public static SettingsDao toSettingsDao(
