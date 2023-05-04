@@ -6,7 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface SettingsRepository extends ReactiveMongoRepository<SettingsDao, String> {
 
-  Mono<SettingsDao> findFirstByMacAddress(String macAddress);
-
-  Mono<Void> deleteByMacAddress(String macAddress);
+  Mono<SettingsDao> findFirstByModuleMacAddress(String macAddress);
 }

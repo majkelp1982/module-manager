@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class SettingsDto {
+public class ModuleSettingsDto {
   private String moduleType;
   private int typeHash;
   private boolean isTypeLocked;

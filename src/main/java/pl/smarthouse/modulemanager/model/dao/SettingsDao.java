@@ -13,12 +13,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class SettingsDao {
   @Id private String id;
-  private String moduleType;
+  private String type;
   private int typeHash;
   @NonNull private boolean isTypeLocked;
-  @NonNull private String macAddress;
-  private String version;
-  @NonNull private String firmware;
-  @NotNull private String ipAddress;
-  @NonNull Instant updateTimestamp;
+  @NonNull private String moduleMacAddress;
+  private String serviceVersion;
+  @NonNull private String moduleFirmwareVersion;
+  @NotNull private String moduleIpAddress;
+  private String serviceAddress;
+  @NonNull Instant moduleUpdateTimestamp;
+  Instant serviceUpdateTimestamp;
+  boolean connectionEstablish;
 }
