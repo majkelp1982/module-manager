@@ -38,6 +38,7 @@ public class ModelMapper {
 
   public static SettingsDto toSettingsDto(final SettingsDao settingsDao) {
     return SettingsDto.builder()
+        .id(settingsDao.getId())
         .type(settingsDao.getType())
         .typeHash(settingsDao.getTypeHash())
         .isTypeLocked(settingsDao.isTypeLocked())
