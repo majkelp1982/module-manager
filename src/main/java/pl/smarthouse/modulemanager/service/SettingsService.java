@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
-import pl.smarthouse.modulemanager.repository.reactive.ReactiveSettingsRepository;
+import pl.smarthouse.modulemanager.repository.SettingsRepository;
 import pl.smarthouse.modulemanager.service.exceptiions.SettingsNotFoundException;
 import pl.smarthouse.modulemanager.utils.ModelMapper;
 import pl.smarthouse.sharedobjects.dto.SettingsDto;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class SettingsHandlerService {
+public class SettingsService {
   private static final String LOG_SUCCESS_ON_ACTION = "Success action: {} for module: {}";
   private static final String LOG_ERROR_ON_ACTION = "Error action:{} for module: {}, reason:{}";
   private static final String LOG_ERROR_ON_FIND_ALL = "Error action:{}, reason:{}";
@@ -24,12 +24,12 @@ public class SettingsHandlerService {
   private static final String ACTION_FIND_ALL = "findAll";
   private static final String ACTION_GET_BY_MAC = "getIPbyMacAddress";
 
-  ReactiveSettingsRepository reactiveSettingsRepository;
+  SettingsRepository settingsRepository;
 
   public Mono<SettingsDto> saveSettings(
       final ModuleSettingsDto moduleSettingsDto, final String hostAddress) {
-    return reactiveSettingsRepository
-        .findByModuleMacAddress(moduleSettingsDto.getMacAddress())
+    return settingsRepository
+        .findFirstByModuleMacAddress(moduleSettingsDto.getMacAddress())
         .map(
             settingsDao ->
                 ModelMapper.updateSettingsDaoWithModuleSettings(
@@ -40,7 +40,7 @@ public class SettingsHandlerService {
                     Mono.just(
                         ModelMapper.toSettingsDao(
                             ObjectId.get().toString(), moduleSettingsDto, hostAddress))))
-        .flatMap(settingsDao -> reactiveSettingsRepository.save(settingsDao))
+        .flatMap(settingsDao -> settingsRepository.save(settingsDao))
         .map(ModelMapper::toSettingsDto)
         .doOnSuccess(ignore -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_SAVE, moduleSettingsDto))
         .doOnError(
@@ -50,7 +50,7 @@ public class SettingsHandlerService {
   }
 
   public Flux<SettingsDto> findAll() {
-    return reactiveSettingsRepository
+    return settingsRepository
         .findAll()
         .map(ModelMapper::toSettingsDto)
         .doOnError(
@@ -58,8 +58,8 @@ public class SettingsHandlerService {
   }
 
   public Mono<SettingsDto> getByModuleMacAddress(final String macAddress) {
-    return reactiveSettingsRepository
-        .findByModuleMacAddress(macAddress)
+    return settingsRepository
+        .findFirstByModuleMacAddress(macAddress)
         .switchIfEmpty(
             Mono.defer(
                 () ->
@@ -77,10 +77,30 @@ public class SettingsHandlerService {
         .map(ModelMapper::toSettingsDto);
   }
 
+  public Mono<SettingsDto> getByType(final String type) {
+    return settingsRepository
+        .findFirstByType(type)
+        .switchIfEmpty(
+            Mono.defer(
+                () ->
+                    Mono.error(
+                        new SettingsNotFoundException(
+                            String.format("Settings not found for type: %s", type)))))
+        .doOnSuccess(settingsDao -> log.info(LOG_SUCCESS_ON_ACTION, ACTION_GET_BY_MAC, settingsDao))
+        .doOnError(
+            throwable ->
+                log.error(
+                    LOG_ERROR_ON_ACTION,
+                    ACTION_GET_BY_MAC,
+                    String.format("Type: %s", type),
+                    throwable.getMessage()))
+        .map(ModelMapper::toSettingsDto);
+  }
+
   public Mono<SettingsDto> updateServiceAddress(
       final String moduleMacAddress, final String serviceAddress) {
-    return reactiveSettingsRepository
-        .findByModuleMacAddress(moduleMacAddress)
+    return settingsRepository
+        .findFirstByModuleMacAddress(moduleMacAddress)
         .switchIfEmpty(
             Mono.defer(
                 () ->
@@ -91,7 +111,7 @@ public class SettingsHandlerService {
         .map(
             settingsDao ->
                 ModelMapper.enrichSettingsDaoWithServiceAddress(settingsDao, serviceAddress))
-        .flatMap(settingsDao -> reactiveSettingsRepository.save(settingsDao))
+        .flatMap(settingsDao -> settingsRepository.save(settingsDao))
         .map(ModelMapper::toSettingsDto)
         .doOnSuccess(
             ignore ->
