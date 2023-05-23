@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
 import pl.smarthouse.modulemanager.repository.SettingsRepository;
-import pl.smarthouse.modulemanager.service.exceptiions.SettingsNotFoundException;
+import pl.smarthouse.modulemanager.service.exceptions.SettingsNotFoundException;
 import pl.smarthouse.modulemanager.utils.ModelMapper;
 import pl.smarthouse.sharedobjects.dto.SettingsDto;
 import reactor.core.publisher.Flux;
@@ -124,6 +124,7 @@ public class SettingsService {
                 log.error(
                     LOG_ERROR_ON_ACTION,
                     String.format("updateServiceAddress with service address: %s", serviceAddress),
-                    moduleMacAddress));
+                    moduleMacAddress,
+                    throwable));
   }
 }
