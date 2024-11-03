@@ -3,9 +3,12 @@ package pl.smarthouse.modulemanager.utils;
 import java.time.LocalDateTime;
 import pl.smarthouse.modulemanager.model.dao.SettingsDao;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
+import pl.smarthouse.sharedobjects.dto.ApplicationSettingsDto;
 import pl.smarthouse.sharedobjects.dto.SettingsDto;
 
 public class ModelMapper {
+  private static final String NOT_APPLICABLE = "n/a";
+
   public static SettingsDao toSettingsDao(
       final String id, final ModuleSettingsDto moduleSettingsDto, final String hostAddress) {
     return SettingsDao.builder()
@@ -21,6 +24,21 @@ public class ModelMapper {
         .build();
   }
 
+  public static SettingsDao toSettingsDao(
+      final String id, final ApplicationSettingsDto applicationSettingsDto) {
+    return SettingsDao.builder()
+        .id(id)
+        .type(applicationSettingsDto.getType().toLowerCase())
+        .moduleMacAddress(NOT_APPLICABLE)
+        .serviceVersion(applicationSettingsDto.getServiceVersion())
+        .serviceAddress(applicationSettingsDto.getServiceAddress())
+        .serviceUpdateTimestamp(DateTimeUtils.toInstant(LocalDateTime.now()))
+        .moduleUpdateTimestamp(DateTimeUtils.toInstant(LocalDateTime.now()))
+        .moduleFirmwareVersion(NOT_APPLICABLE)
+        .moduleIpAddress(NOT_APPLICABLE)
+        .build();
+  }
+
   public static SettingsDao updateSettingsDaoWithModuleSettings(
       final SettingsDao settingsDao,
       final ModuleSettingsDto moduleSettingsDto,
@@ -33,6 +51,7 @@ public class ModelMapper {
     settingsDao.setModuleFirmwareVersion(moduleSettingsDto.getFirmware());
     settingsDao.setModuleUpdateTimestamp(DateTimeUtils.toInstant(LocalDateTime.now()));
     settingsDao.setModuleIpAddress(hostAddress);
+    settingsDao.setUptimeInMinutes(moduleSettingsDto.getUptimeInMinutes());
     return settingsDao;
   }
 
@@ -50,6 +69,7 @@ public class ModelMapper {
         .moduleUpdateTimestamp(settingsDao.getModuleUpdateTimestamp())
         .serviceUpdateTimestamp(settingsDao.getServiceUpdateTimestamp())
         .connectionEstablish(settingsDao.isConnectionEstablish())
+        .uptimeInMinutes(settingsDao.getUptimeInMinutes())
         .build();
   }
 

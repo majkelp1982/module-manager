@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
 import pl.smarthouse.modulemanager.service.SettingsService;
 import pl.smarthouse.modulemanager.service.exceptions.SettingsNotFoundException;
+import pl.smarthouse.sharedobjects.dto.ApplicationSettingsDto;
 import pl.smarthouse.sharedobjects.dto.SettingsDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,6 +29,12 @@ public class ModuleManagerController {
       @RequestBody final ModuleSettingsDto moduleSettingsDto, final ServerHttpRequest request) {
     return settingsService.saveSettings(
         moduleSettingsDto, request.getRemoteAddress().getAddress().getHostAddress());
+  }
+
+  @PostMapping(value = "/application")
+  public Mono<SettingsDto> saveApplicationSettings(
+      @RequestBody final ApplicationSettingsDto applicationSettingsDto) {
+    return settingsService.saveApplicationSettings(applicationSettingsDto);
   }
 
   @PutMapping(value = "/updateServiceAddress")

@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
+import pl.smarthouse.modulemanager.model.dao.SettingsDao;
 import pl.smarthouse.modulemanager.model.dto.ModuleSettingsDto;
 import pl.smarthouse.modulemanager.repository.SettingsRepository;
 import pl.smarthouse.modulemanager.service.exceptions.SettingsNotFoundException;
 import pl.smarthouse.modulemanager.utils.ModelMapper;
+import pl.smarthouse.sharedobjects.dto.ApplicationSettingsDto;
 import pl.smarthouse.sharedobjects.dto.SettingsDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,6 +49,28 @@ public class SettingsService {
             throwable ->
                 log.error(
                     LOG_ERROR_ON_ACTION, ACTION_SAVE, moduleSettingsDto, throwable.getMessage()));
+  }
+
+  public Mono<SettingsDto> saveApplicationSettings(
+      final ApplicationSettingsDto applicationSettingsDto) {
+    return settingsRepository
+        .findFirstByType(applicationSettingsDto.getType())
+        .map(SettingsDao::getId)
+        .switchIfEmpty(Mono.defer(() -> Mono.just(ObjectId.get().toString())))
+        .map(id -> ModelMapper.toSettingsDao(id, applicationSettingsDto))
+        .flatMap(settingsDao -> settingsRepository.save(settingsDao))
+        .map(ModelMapper::toSettingsDto)
+        .doOnSuccess(
+            savedSettingsDto ->
+                log.info(LOG_SUCCESS_ON_ACTION, ACTION_SAVE, applicationSettingsDto))
+        .doOnError(
+            throwable ->
+                log.error(
+                    LOG_ERROR_ON_ACTION,
+                    ACTION_SAVE,
+                    applicationSettingsDto,
+                    throwable.getMessage(),
+                    throwable));
   }
 
   public Flux<SettingsDto> findAll() {

@@ -24,4 +24,5 @@ public class SettingsDao {
   @NonNull Instant moduleUpdateTimestamp;
   Instant serviceUpdateTimestamp;
   boolean connectionEstablish;
+  long uptimeInMinutes;
 }

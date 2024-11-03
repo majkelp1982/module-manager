@@ -19,4 +19,5 @@ public class ModuleSettingsDto {
   private String firmware;
   private String ipAddress;
   private Instant updateTimestamp;
+  private long uptimeInMinutes;
 }
