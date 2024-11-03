@@ -28,7 +28,7 @@ public class ModelMapper {
       final String id, final ApplicationSettingsDto applicationSettingsDto) {
     return SettingsDao.builder()
         .id(id)
-        .type(applicationSettingsDto.getType().toLowerCase())
+        .type(applicationSettingsDto.getType().toUpperCase())
         .moduleMacAddress(NOT_APPLICABLE)
         .serviceVersion(applicationSettingsDto.getServiceVersion())
         .serviceAddress(applicationSettingsDto.getServiceAddress())
