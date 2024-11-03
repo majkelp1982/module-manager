@@ -149,6 +149,7 @@ public class SettingsService {
                     LOG_ERROR_ON_ACTION,
                     String.format("updateServiceAddress with service address: %s", serviceAddress),
                     moduleMacAddress,
+                    throwable.getMessage(),
                     throwable));
   }
 }
